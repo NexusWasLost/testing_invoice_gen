@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Test</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+            background-color: #f9f9f9;
+        }
+
+        .invoice-card {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eceff1;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .invoice-title {
+            font-size: 20px;
+            color: #64748b;
+        }
+
+        .bill-to {
+            margin-bottom: 30px;
+        }
+
+        .bill-to p {
+            margin: 4px 0;
+        }
+
+        .label {
+            color: #64748b;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th {
+            text-align: left;
+            padding: 10px;
+            background-color: #f8fafc;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .total-box {
+            border-top: 2px solid #2563eb;
+            padding-top: 10px;
+            width: 50%;
+        }
+
+        .download-bar {
+            max-width: 600px;
+            margin: 16px auto 0 auto;
+            text-align: right;
+        }
+
+        .download-button {
+            background-color: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .download-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+
+            .download-bar {
+                display: none;
+            }
+
+            .invoice-card {
+                box-shadow: none;
+                max-width: 100%;
+                margin: 0;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="invoice-card">
+        <div class="header">
+            <div class="company-name">Test</div>
+            <div class="invoice-title">INVOICE</div>
+        </div>
+
+        <div class="bill-to">
+            <p class="label">Billed To:</p>
+            <p class="name">{{name}}</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th class="text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Base Service Package</td>
+                    <td class="text-right">${{price}}</td>
+                </tr>
+                <tr>
+                    <td>Priority Support Upgrade</td>
+                    <td class="text-right">${{increasedPrice}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <div class="total-box">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Total Due:</span>
+                    <span>${{totalPrice}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="download-bar">
+        <button class="download-button" onclick="window.print()">Download Invoice</button>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("download") === "true") {
+            window.addEventListener("load", function () {
+                window.print();
+            });
+        }
+    </script>
+
+</body>
+
+</html>
