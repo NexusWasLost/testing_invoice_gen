@@ -25,7 +25,7 @@ function errorHandler(err, req, res, next) {
     }
 
     console.log(req.method, req.originalUrl, "-", statusCode, "-", message);
-    console.log(err.stack);
+    console.log("Stack: ", err.stack);
 
     if (process.env.NODE_ENV === "production") {
         return res.status(statusCode).json({
