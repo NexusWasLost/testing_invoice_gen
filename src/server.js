@@ -5,10 +5,12 @@ import { fileURLToPath } from "url";
 import * as path from "path";
 import morgan from "morgan";
 import errorHandler from "./middlewares/errorHandler.js";
+import { connectDB } from "./config/DB.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+await connectDB();
 const app = express();
 
 app.use(express.json());
@@ -26,7 +28,9 @@ app.get("/", function (req, res) {
 });
 
 import invoiceRouter from "./routes/invoice.route.js";
+import itemRouter from "./routes/item.route.js";
 app.use("/api/invoice", invoiceRouter);
+app.use("/api/item", itemRouter);
 
 app.use(errorHandler);
 
