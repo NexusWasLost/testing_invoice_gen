@@ -46,6 +46,16 @@ const orderSchema = new Schema({
         type: String,
         enum: ["PENDING", "CANCELLED", "COMPLETE"],
         default: "PENDING"
+    },
+    invoiceID:{
+        type: String,
+        unique: true
+    },
+    razorpayOrderId: {
+        type: String
+    },
+    razorpayPaymentId: {
+        type: String
     }
 },
 {
