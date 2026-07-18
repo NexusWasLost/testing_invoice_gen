@@ -47,7 +47,7 @@ const orderSchema = new Schema({
         enum: ["PENDING", "CANCELLED", "COMPLETE"],
         default: "PENDING"
     },
-    invoiceID:{
+    invoiceId:{
         type: String,
         unique: true
     },
