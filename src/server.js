@@ -29,8 +29,10 @@ app.get("/", function (req, res) {
 
 import invoiceRouter from "./routes/invoice.route.js";
 import itemRouter from "./routes/item.route.js";
+import orderRouter from "./routes/order.route.js";
 app.use("/api/invoice", invoiceRouter);
 app.use("/api/item", itemRouter);
+app.use("/api/order", orderRouter);
 
 app.use(errorHandler);
 
