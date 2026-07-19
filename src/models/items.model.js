@@ -7,15 +7,18 @@ const itemSchema = new Schema({
     },
     SKU: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
     MRP: {
         type: Number,
-        min: 0
+        min: 0,
+        default: 0
     },
     taxApplicable: {
         type: Number,
-        min: 0
+        min: 0,
+        default: 18
     },
     notes:{
         type: String
