@@ -2,6 +2,7 @@ import ApiError from "../utils/ApiError.js";
 import itemModel from "../models/items.model.js";
 import orderModel from "../models/orders.model.js";
 import { razorpay } from "../config/config.js";
+import { getInvoiceId } from "../utils/invoiceIdGen.js";
 
 export async function createPendingOrder(req, res, next) {
     try {
@@ -40,10 +41,18 @@ export async function createPendingOrder(req, res, next) {
         const orders = await razorpay.orders.create(options);
         if (!orders) throw new ApiError(500, "Failed to create Razorpay order !");
 
+        const ord = new orderModel({
+            items: orderItems,
+            total: Math.round(total),
+            invoiceId: getInvoiceId(),
+            razorpayOrderId: orders.id
+        });
+        await ord.save();
+
         return res.status(201).json({
             success: true,
             message: "Created razorpay order successfully",
-            data: orders
+            data: ord
         });
     }
     catch (error) {
