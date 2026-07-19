@@ -6,6 +6,18 @@ function errorHandler(err, req, res, next) {
         case err.name === "ApiError":
             break;
 
+        //razorpay custom error case
+        /*
+        A bit note on this JS quirk - && returns the first falsey value or the last value and not boolean
+        so we need to negaate it once to convert to bool and then negate it again to check against "TRUE".
+        */
+        case !!(err.error && err.error.description):
+            statusCode = err.statusCode || 400;
+            message = err.error.description;
+            err.rzp_err = err.error;
+            console.log(err.rzp_err);
+            break;
+
         case err.name === "ValidationError":
             statusCode = 400;
             break;
