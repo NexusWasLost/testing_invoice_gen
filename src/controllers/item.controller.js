@@ -4,7 +4,7 @@ import itemModel from "../models/items.model.js";
 export async function addItem(req, res, next){
     try{
         const {
-            name, SKU, MPR, taxApplicable, notes
+            name, SKU, MRP, taxApplicable, notes
         } = req.body;
 
         if(await itemModel.findOne({ SKU: SKU }))
@@ -13,7 +13,7 @@ export async function addItem(req, res, next){
         const item = new itemModel({
             name: name,
             SKU: SKU,
-            MRP: MPR,
+            MRP: MRP,
             taxApplicable: taxApplicable || 18,
             notes: notes || null
         });
