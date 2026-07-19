@@ -17,7 +17,6 @@ export async function createPendingOrder(req, res, next) {
             const item = await itemModel.findById(i.itemId);
             if (!item) throw new ApiError(404, `Item ${ i.itemName } not found !`);
 
-            console.log(item);
             const baseAmount = item.MRP * i.quantity;
             const taxAmount = baseAmount * (item.taxApplicable / 100);
             const totalAmount = baseAmount + taxAmount;
@@ -33,11 +32,9 @@ export async function createPendingOrder(req, res, next) {
             });
         }
 
-        console.log(orderItems);
         const options = {
-            amount: total * 100,
-            currency: "INR",
-            invoice: "INV-001"
+            amount: Math.round(total * 100),
+            currency: "INR"
         }
 
         const orders = await razorpay.orders.create(options);
