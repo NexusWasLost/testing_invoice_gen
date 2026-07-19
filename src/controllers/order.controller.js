@@ -43,11 +43,22 @@ export async function createPendingOrder(req, res, next) {
 
         const ord = new orderModel({
             items: orderItems,
-            total: Math.round(total),
+            total: Math.round(total * 100) / 100, //round to 2 decimal point
             invoiceId: getInvoiceId(),
             razorpayOrderId: orders.id
         });
-        await ord.save();
+        try{
+            await ord.save();
+        }
+        catch(saveError){
+            console.error("ORPHANED RAZORPAY ORDER: Failed to save order to DB after razorpay order created: ", {
+                razorpayOrderId: orders.id,
+                amount: options.amount,
+                cartItems: orderItems,
+                DB_ERR: saveError.message
+            });
+            throw new ApiError(500, "Order was Not placed !");
+        }
 
         return res.status(201).json({
             success: true,
