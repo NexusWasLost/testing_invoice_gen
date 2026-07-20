@@ -19,12 +19,14 @@ const orderItemSchema = new Schema({
     //populated from item model when the purchase is made
     taxAtTimeOfPurchase: {
         type: Number,
-        min: 0
+        min: 0,
+        required: true
     },
     //populated from item model when the purchase is made
     MRPAtTimeOfPurchase: {
         type: Number,
-        min: 0
+        min: 0,
+        required: true
     },
     notes: {
         type: String

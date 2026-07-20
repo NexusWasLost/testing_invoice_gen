@@ -28,7 +28,7 @@ export async function createPendingOrder(req, res, next) {
                 item: item._id,
                 quantity: i.quantity,
                 sellingPrice: item.MRP,
-                taxAtTimeOfpurchase: item.taxApplicable || 18,
+                taxAtTimeOfPurchase: item.taxApplicable || 18,
                 MRPAtTimeOfPurchase: item.MRP
             });
         }
