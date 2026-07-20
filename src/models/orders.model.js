@@ -54,10 +54,13 @@ const orderSchema = new Schema({
         unique: true
     },
     razorpayOrderId: {
-        type: String
+        type: String,
+        unique: true
     },
     razorpayPaymentId: {
-        type: String
+        type: String,
+        unique: true,
+        sparse: true
     }
 },
 {
