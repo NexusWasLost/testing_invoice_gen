@@ -1,8 +1,9 @@
 import ApiError from "../utils/ApiError.js";
 import itemModel from "../models/items.model.js";
 import orderModel from "../models/orders.model.js";
-import { razorpay } from "../config/config.js";
+import conf, { razorpay } from "../config/config.js";
 import { getInvoiceId } from "../utils/invoiceIdGen.js";
+import { validatePaymentVerification } from "razorpay/dist/utils/razorpay-utils.js";
 
 export async function createPendingOrder(req, res, next) {
     try {
@@ -16,7 +17,7 @@ export async function createPendingOrder(req, res, next) {
 
         for (const i of cartItems) {
             const item = await itemModel.findById(i.itemId);
-            if (!item) throw new ApiError(404, `Item ${ i.itemName } not found !`);
+            if (!item) throw new ApiError(404, `Item ${i.itemName} not found !`);
 
             const baseAmount = item.MRP * i.quantity;
             const taxAmount = baseAmount * (item.taxApplicable / 100);
@@ -47,10 +48,10 @@ export async function createPendingOrder(req, res, next) {
             invoiceId: getInvoiceId(),
             razorpayOrderId: orders.id
         });
-        try{
+        try {
             await ord.save();
         }
-        catch(saveError){
+        catch (saveError) {
             console.error("ORPHANED RAZORPAY ORDER: Failed to save order to DB after razorpay order created: ", {
                 razorpayOrderId: orders.id,
                 amount: options.amount,
@@ -64,6 +65,34 @@ export async function createPendingOrder(req, res, next) {
             success: true,
             message: "Created razorpay order successfully",
             data: ord
+        });
+    }
+    catch (error) {
+        return next(error);
+    }
+}
+
+export async function verifyOrder(req, res, next) {
+    try {
+        const {
+            razorpay_order_id, razorpay_payment_id, razorpay_signature
+        } = req.body;
+
+        if(!await orderModel.findOne({ razorpayOrderId: razorpay_order_id }))
+            throw new ApiError(404, "No valid orders found with this razorpay order ID");
+
+        const isValid = validatePaymentVerification(
+            { order_id: razorpay_order_id, payment_id: razorpay_payment_id },
+            razorpay_signature,
+            conf.RZP_KEY_SECRET
+        );
+
+        if(!isValid)
+            throw new ApiError(400, "Verification failed: Invalid Payment ID or signature provided !");
+
+        return res.status(200).json({
+            success: true,
+            message: "Order verified successfully"
         });
     }
     catch (error) {

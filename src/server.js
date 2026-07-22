@@ -6,6 +6,7 @@ import * as path from "path";
 import morgan from "morgan";
 import errorHandler from "./middlewares/errorHandler.js";
 import { connectDB } from "./config/DB.js";
+import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("tiny"));
+app.use(cors());
 
 app.engine("hbs", engine({ extname: ".hbs", layoutsDir: false, defaultLayout: false }));
 app.set("view engine", "hbs");
