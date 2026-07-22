@@ -29,3 +29,21 @@ export async function addItem(req, res, next){
         return next(error);
     }
 }
+
+export async function getAllItems(req, res, next){
+    try{
+        const allItems = await itemModel.find({})
+            .select("-__v -createdAt -updatedAt");
+
+        if(allItems.length === 0) throw new ApiError(500, "No items found !");
+
+        return res.status(200).json({
+            success: true,
+            message: "All items fetched",
+            data: allItems
+        });
+    }
+    catch(error){
+        return next(error);
+    }
+}
