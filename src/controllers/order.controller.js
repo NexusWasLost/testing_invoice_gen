@@ -3,7 +3,7 @@ import itemModel from "../models/items.model.js";
 import orderModel from "../models/orders.model.js";
 import conf, { razorpay } from "../config/config.js";
 import { getInvoiceId } from "../utils/invoiceIdGen.js";
-import { validatePaymentVerification } from "razorpay/dist/utils/razorpay-utils.js";
+import { validatePaymentVerification, validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 
 export async function createPendingOrder(req, res, next) {
     try {
@@ -45,7 +45,6 @@ export async function createPendingOrder(req, res, next) {
         const ord = new orderModel({
             items: orderItems,
             total: Math.round(total * 100) / 100, //round to 2 decimal point
-            invoiceId: getInvoiceId(),
             razorpayOrderId: orders.id
         });
         try {
@@ -78,7 +77,7 @@ export async function verifyOrder(req, res, next) {
             razorpay_order_id, razorpay_payment_id, razorpay_signature
         } = req.body;
 
-        if(!await orderModel.findOne({ razorpayOrderId: razorpay_order_id }))
+        if (!await orderModel.findOne({ razorpayOrderId: razorpay_order_id }))
             throw new ApiError(404, "No valid orders found with this razorpay order ID");
 
         const isValid = validatePaymentVerification(
@@ -87,13 +86,67 @@ export async function verifyOrder(req, res, next) {
             conf.RZP_KEY_SECRET
         );
 
-        if(!isValid)
+        if (!isValid)
             throw new ApiError(400, "Verification failed: Invalid Payment ID or signature provided !");
 
         return res.status(200).json({
             success: true,
             message: "Order verified successfully"
         });
+    }
+    catch (error) {
+        return next(error);
+    }
+}
+
+export async function rzpWebhook(req, res, next) {
+    try {
+        const signature = req.headers["x-razorpay-signature"];
+        const isValid = await validateWebhookSignature(
+            JSON.stringify(req.body),
+            signature,
+            conf.RZP_WEBHOOK_SECRET
+        );
+
+        if (!isValid) throw new ApiError(500, "Webhook signature verification failed !");
+
+        const { event, payload } = req.body;
+        switch (event) {
+            case "payment.authorized":
+                // console.log("Payment authorized:", payload);
+                break;
+
+                case "payment.captured":
+                // console.log("Payment captured:", payload);
+                break;
+
+                case "payment.failed":
+                // console.log("Payment failed:", payload);
+                break;
+
+                //update database after order paid
+            case "order.paid":
+                const updatedOrd = await orderModel.findOneAndUpdate(
+                    {
+                        razorpayOrderId: payload.order.entity.id,
+                        status: "PENDING"
+                    },
+                    {
+                        status: "COMPLETE",
+                        razorpayPaymentId: payload.payment.entity.id,
+                        invoiceId: getInvoiceId()
+                    },
+                    { returnDocument: "after", runValidators: true }
+                );
+
+                break;
+
+            default:
+                console.log(`Unhandled event: ${event}`);
+                break;
+        }
+
+        res.status(200).send();
     }
     catch (error) {
         return next(error);
