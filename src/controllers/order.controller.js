@@ -110,43 +110,44 @@ export async function rzpWebhook(req, res, next) {
 
         if (!isValid) throw new ApiError(500, "Webhook signature verification failed !");
 
-        const { event, payload } = req.body;
-        switch (event) {
-            case "payment.authorized":
-                // console.log("Payment authorized:", payload);
-                break;
+        res.status(200).send("OK");
+
+        try {
+            const { event, payload } = req.body;
+            switch (event) {
+                case "payment.authorized":
+                    break;
 
                 case "payment.captured":
-                // console.log("Payment captured:", payload);
-                break;
+                    break;
 
                 case "payment.failed":
-                // console.log("Payment failed:", payload);
-                break;
+                    break;
 
-                //update database after order paid
-            case "order.paid":
-                const updatedOrd = await orderModel.findOneAndUpdate(
-                    {
-                        razorpayOrderId: payload.order.entity.id,
-                        status: "PENDING"
-                    },
-                    {
-                        status: "COMPLETE",
-                        razorpayPaymentId: payload.payment.entity.id,
-                        invoiceId: getInvoiceId()
-                    },
-                    { returnDocument: "after", runValidators: true }
-                );
+                case "order.paid":
+                    const updatedOrd = await orderModel.findOneAndUpdate(
+                        {
+                            razorpayOrderId: payload.order.entity.id,
+                            status: "PENDING"
+                        },
+                        {
+                            status: "COMPLETE",
+                            razorpayPaymentId: payload.payment.entity.id,
+                            invoiceId: getInvoiceId()
+                        },
+                        { returnDocument: "after", runValidators: true }
+                    );
 
-                break;
+                    break;
 
-            default:
-                console.log(`Unhandled event: ${event}`);
-                break;
+                default:
+                    break;
+            }
         }
-
-        res.status(200).send();
+        catch (error) {
+            console.error("ERROR OCCURED WHILE PROCESSING WEBHOOK:", error);
+            return;
+        }
     }
     catch (error) {
         return next(error);
