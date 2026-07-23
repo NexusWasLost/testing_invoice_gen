@@ -51,7 +51,8 @@ const orderSchema = new Schema({
     },
     invoiceId:{
         type: String,
-        unique: true
+        unique: true,
+        sparse: true
     },
     razorpayOrderId: {
         type: String,
