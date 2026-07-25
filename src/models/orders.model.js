@@ -37,6 +37,14 @@ const orderItemSchema = new Schema({
 });
 
 const orderSchema = new Schema({
+    nameOnOrder: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
     items: {
         type: [orderItemSchema],
     },

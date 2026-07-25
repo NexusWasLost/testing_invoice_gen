@@ -8,7 +8,10 @@ import { validatePaymentVerification, validateWebhookSignature } from "razorpay/
 export async function createPendingOrder(req, res, next) {
     try {
         //orderItems is an array
-        const { cartItems } = req.body;
+        const { nameOnOrder, email, cartItems } = req.body;
+
+        if(!nameOnOrder || !email)
+            throw new ApiError(400, "Name on order and email is required !");
 
         if (!cartItems || cartItems.length === 0) throw new ApiError(400, "Cart is empty");
 
@@ -43,6 +46,8 @@ export async function createPendingOrder(req, res, next) {
         if (!orders) throw new ApiError(500, "Failed to create Razorpay order !");
 
         const ord = new orderModel({
+            nameOnOrder: nameOnOrder,
+            email: email,
             items: orderItems,
             total: Math.round(total * 100) / 100, //round to 2 decimal point
             razorpayOrderId: orders.id
