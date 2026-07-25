@@ -6,6 +6,14 @@ const orderItemSchema = new Schema({
         ref: "item",
         required: true
     },
+    itemName: {
+        type: String,
+        required: true
+    },
+    itemSKU: {
+        type: String,
+        required: true
+    },
     quantity:{
         type: Number,
         min: 1,

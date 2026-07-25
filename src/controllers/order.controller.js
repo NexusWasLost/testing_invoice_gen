@@ -30,6 +30,8 @@ export async function createPendingOrder(req, res, next) {
 
             orderItems.push({
                 item: item._id,
+                itemName: item.name,
+                itemSKU: item.SKU,
                 quantity: i.quantity,
                 sellingPrice: item.MRP,
                 taxAtTimeOfPurchase: item.taxApplicable || 18,
