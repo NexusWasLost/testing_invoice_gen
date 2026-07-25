@@ -10,12 +10,13 @@ export async function createPendingOrder(req, res, next) {
         //orderItems is an array
         const { nameOnOrder, email, cartItems } = req.body;
 
-        if(!nameOnOrder || !email)
+        if (!nameOnOrder || !email)
             throw new ApiError(400, "Name on order and email is required !");
 
         if (!cartItems || cartItems.length === 0) throw new ApiError(400, "Cart is empty");
 
         let orderItems = [];
+        let subtotal = 0;
         let total = 0;
 
         for (const i of cartItems) {
@@ -25,6 +26,8 @@ export async function createPendingOrder(req, res, next) {
             const baseAmount = item.MRP * i.quantity;
             const taxAmount = baseAmount * (item.taxApplicable / 100);
             const totalAmount = baseAmount + taxAmount;
+            //update global subtotal
+            subtotal += baseAmount;
             //update global total
             total += totalAmount;
 
@@ -51,6 +54,7 @@ export async function createPendingOrder(req, res, next) {
             nameOnOrder: nameOnOrder,
             email: email,
             items: orderItems,
+            subtotal: Math.round(subtotal * 100) / 100,
             total: Math.round(total * 100) / 100, //round to 2 decimal point
             razorpayOrderId: orders.id
         });

@@ -56,9 +56,15 @@ const orderSchema = new Schema({
     items: {
         type: [orderItemSchema],
     },
+    subtotal: {
+        type: Number,
+        min: 0,
+        required: true
+    },
     total: {
         type: Number,
-        min: 0
+        min: 0,
+        required: true
     },
     status: {
         type: String,
