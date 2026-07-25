@@ -82,9 +82,10 @@ export async function verifyOrder(req, res, next) {
             razorpay_order_id, razorpay_payment_id, razorpay_signature
         } = req.body;
 
-        if (!await orderModel.findOne({ razorpayOrderId: razorpay_order_id }))
-            throw new ApiError(404, "No valid orders found with this razorpay order ID");
+        const ord = await orderModel.findOne({ razorpayOrderId: razorpay_order_id }).select("_id");
+        if (!ord) throw new ApiError(404, "No valid orders found with this razorpay order ID");
 
+        // console.log(ord);
         const isValid = validatePaymentVerification(
             { order_id: razorpay_order_id, payment_id: razorpay_payment_id },
             razorpay_signature,
@@ -96,7 +97,8 @@ export async function verifyOrder(req, res, next) {
 
         return res.status(200).json({
             success: true,
-            message: "Order verified successfully"
+            message: "Order verified successfully",
+            data: { orderId: (ord._id).toString() || null }
         });
     }
     catch (error) {
