@@ -1,5 +1,5 @@
 {
-  "name": "invoice-generation-testing",
+  "name": "e2e-payment-invoice-system",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
