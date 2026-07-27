@@ -1,5 +1,5 @@
 {
-  "name": "e2e-payment-invoice-system",
+  "name": "pixelstore-api",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
