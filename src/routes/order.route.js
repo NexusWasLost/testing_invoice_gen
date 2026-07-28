@@ -6,6 +6,7 @@ import {
 
     createPendingOrder,
     verifyOrder,
+    getOrderStatus,
     rzpWebhook
 
 } from "../controllers/order.controller.js";
@@ -13,5 +14,6 @@ import {
 orderRouter.post("/create", createPendingOrder);
 orderRouter.post("/verify", verifyOrder);
 orderRouter.post("/webhook", rzpWebhook);
+orderRouter.get("/status/:orderId", getOrderStatus);
 
 export default orderRouter;

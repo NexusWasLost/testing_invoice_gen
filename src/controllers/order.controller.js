@@ -166,3 +166,25 @@ export async function rzpWebhook(req, res, next) {
         return next(error);
     }
 }
+
+export async function getOrderStatus(req, res, next){
+    try{
+        const orderId = req.params["orderId"];
+        if(!orderId) throw new ApiError(400, "A valid order ID is needed to check order status !");
+
+        const ord = await orderModel.findById(orderId).select("status");
+        if(!ord) throw new ApiError(404, "No valid orders found with this order ID !");
+
+        let stat = "NOT_PAID";
+        if(ord.status === "COMPLETE") stat = "PAID";
+
+        return res.status(200).json({
+            success: true,
+            message: "Fetched order status successfully",
+            data: stat
+        });
+    }
+    catch(error){
+        return next(error);
+    }
+}
