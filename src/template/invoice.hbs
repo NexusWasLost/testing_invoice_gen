@@ -296,6 +296,20 @@
     </div>
 
     <script>
+        window.oncontextmenu = function () {
+            return false;
+        };
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "F12") {
+                event.preventDefault();
+            }
+
+            if (event.ctrlKey && event.shiftKey && (event.key === "I" || event.key === "J")) {
+                event.preventDefault();
+            }
+        }, false);
+
         const params = new URLSearchParams(window.location.search);
 
         if (params.get("download") === "true") {
