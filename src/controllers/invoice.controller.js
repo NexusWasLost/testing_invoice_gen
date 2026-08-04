@@ -30,10 +30,16 @@ export async function renderInvoice(req, res, next) {
                 }
             }),
             sub_total: ord.subtotal,
+            tax_total: ord.taxtotal,
             total: ord.total,
             invoiceId: ord.invoiceId,
             orderId: ord.orderId,
-            orderDate: ord.invoiceIssuedAt,
+            orderDate: new Date(ord.invoiceIssuedAt).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                timeZone: "UTC"
+            }),
             paidUsing: ord.paidUsing
         }
 
