@@ -32,7 +32,7 @@ export async function renderInvoice(req, res, next) {
             sub_total: ord.subtotal,
             total: ord.total,
             invoiceId: ord.invoiceId,
-            rzp_order_id: ord.razorpayOrderId
+            orderId: ord.orderId
         }
 
         return res.render("invoice", context);
