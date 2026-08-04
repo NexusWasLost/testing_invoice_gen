@@ -85,6 +85,11 @@ const orderSchema = new Schema({
     invoiceIssuedAt:{
         type: Date
     },
+    paidUsing:{
+        type: String,
+        enum: ["netbanking", "card", "wallet"],
+        default: null
+    },
     razorpayOrderId: {
         type: String,
         unique: true

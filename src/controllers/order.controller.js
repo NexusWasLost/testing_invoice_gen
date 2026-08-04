@@ -148,7 +148,8 @@ export async function rzpWebhook(req, res, next) {
                             status: "COMPLETE",
                             razorpayPaymentId: payload.payment.entity.id,
                             invoiceId: getInvoiceId(),
-                            invoiceIssuedAt: new Date()
+                            invoiceIssuedAt: new Date(),
+                            paidUsing: payload.payment.entity.method
                         },
                         { returnDocument: "after", runValidators: true }
                     );

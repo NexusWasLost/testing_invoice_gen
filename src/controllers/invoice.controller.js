@@ -32,7 +32,9 @@ export async function renderInvoice(req, res, next) {
             sub_total: ord.subtotal,
             total: ord.total,
             invoiceId: ord.invoiceId,
-            orderId: ord.orderId
+            orderId: ord.orderId,
+            orderDate: ord.invoiceIssuedAt,
+            paidUsing: ord.paidUsing
         }
 
         return res.render("invoice", context);
