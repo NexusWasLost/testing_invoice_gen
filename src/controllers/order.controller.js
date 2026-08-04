@@ -2,7 +2,7 @@ import ApiError from "../utils/ApiError.js";
 import itemModel from "../models/items.model.js";
 import orderModel from "../models/orders.model.js";
 import conf, { razorpay } from "../config/config.js";
-import { getInvoiceId } from "../utils/invoiceIdGen.js";
+import { getInvoiceId, getOrderId } from "../utils/idGen.js";
 import { validatePaymentVerification, validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 
 export async function createPendingOrder(req, res, next) {
@@ -51,6 +51,7 @@ export async function createPendingOrder(req, res, next) {
         if (!orders) throw new ApiError(500, "Failed to create Razorpay order !");
 
         const ord = new orderModel({
+            orderId: getOrderId(),
             nameOnOrder: nameOnOrder,
             email: email,
             items: orderItems,

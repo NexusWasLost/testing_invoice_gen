@@ -41,10 +41,16 @@ const orderItemSchema = new Schema({
     }
 },
 {
-    timestamps: true, _id: false
+    timestamps: false, _id: false
 });
 
 const orderSchema = new Schema({
+    orderId: {
+        type: String,
+        required: true,
+        unique: true,
+        sparse: true
+    },
     nameOnOrder: {
         type: String,
         required: true
