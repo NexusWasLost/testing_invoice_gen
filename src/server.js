@@ -17,7 +17,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("tiny"));
-app.use(cors());
+app.use(cors({
+    origin: ["https://pixelstore.pages.dev"],
+    methods: ["GET", "POST", "OPTIONS"]
+}));
 
 app.engine("hbs", engine({ extname: ".hbs", layoutsDir: false, defaultLayout: false }));
 app.set("view engine", "hbs");
