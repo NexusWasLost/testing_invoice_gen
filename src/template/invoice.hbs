@@ -4,188 +4,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
     <title>Invoice - {{invoiceId}}</title>
     <style>
-        @page {
-            size: A4;
-            margin: 20mm;
-        }
-
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        @page {
+            size: A4;
+            margin-left: 0.5in;
+            margin-right: 0.5in;
+            margin-top: 0.3in;
+            margin-bottom: 0.3in;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #1e293b;
-            margin: 0;
-            padding: 40px;
-            background-color: #f1f5f9;
-        }
-
-        .invoice-card {
-            max-width: 650px;
-            margin: 0 auto;
-            padding: 40px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-        }
-
-        .header {
+            font-family: sans-serif, Tahoma, Verdana;
+            background-color: #f4f4f9;
+            color: #333;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 24px;
-            margin-bottom: 28px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: 20px;
         }
 
-        .company-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: #2563eb;
-            letter-spacing: 0.5px;
-        }
-
-        .invoice-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #94a3b8;
-            letter-spacing: 2px;
-            text-align: right;
-        }
-
-        .invoice-id {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-top: 4px;
-        }
-
-        .meta-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 28px;
-            gap: 24px;
-        }
-
-        .label {
-            color: #94a3b8;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .bill-to .name {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .bill-to .email {
-            font-size: 13px;
-            color: #64748b;
-            margin-top: 2px;
-        }
-
-        .order-meta {
-            text-align: right;
-            font-size: 12px;
-            color: #64748b;
-        }
-
-        .order-meta .ord-id {
-            font-family: monospace;
-            font-size: 11px;
-            color: #94a3b8;
-        }
-
-        table {
+        .invoice-container {
+            background-color: #ffffff;
             width: 100%;
-            border-collapse: collapse;
+            max-width: 800px;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .invoice-number-top {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .brand-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
             margin-bottom: 24px;
         }
 
-        th {
-            text-align: left;
-            padding: 10px 8px;
-            background-color: #f8fafc;
-            color: #64748b;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            border-bottom: 1px solid #e2e8f0;
+        .logo {
+            width: 60px;
+            height: 60px;
+            padding: 5px;
+            background-color: #f1f5f9;
+            border-radius: 50%;
         }
 
-        td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 14px;
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.2;
+            font-family: "Space Grotesk", sans-serif;
         }
 
-        .text-right {
+        .invoice-title {
+            font-size: 50px;
+            font-weight: 800;
+            color: #0f172a;
+            text-transform: lowercase;
+            letter-spacing: -2px;
+            text-align: center;
+            margin-bottom: 40px;
+            font-family: "Space Grotesk", sans-serif;
+        }
+
+        .details-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        .details-left strong,
+        .details-right strong {
+            color: #0f172a;
+        }
+
+        .details-left p,
+        .details-right p {
+            color: #475569;
+        }
+
+        .payment-method {
+            margin-top: 12px;
+        }
+
+        .details-right {
             text-align: right;
         }
 
-        .sku-cell {
-            display: block;
-            font-size: 11px;
-            color: #94a3b8;
-            font-family: monospace;
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        .items-table th {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .items-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            color: #334155;
+            vertical-align: top;
+        }
+
+        .items-table tbody tr {
+            background-color: #ffffff;
+        }
+
+        .items-table tbody tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .item-sku {
+            font-size: 12px;
+            color: #64748b;
             margin-top: 2px;
         }
 
-        .tax-cell {
-            color: #64748b;
-            font-size: 13px;
+        .items-table .text-right {
+            text-align: right;
         }
 
-        .totals {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .totals-box {
-            width: 55%;
-        }
-
-        .totals-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: #64748b;
-            padding: 6px 0;
-        }
-
-        .totals-row.grand {
-            border-top: 2px solid #2563eb;
-            margin-top: 8px;
-            padding-top: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        .footer-note {
-            margin-top: 32px;
-            padding-top: 16px;
-            border-top: 1px solid #f1f5f9;
-            font-size: 11px;
-            color: #94a3b8;
+        .items-table .text-center {
             text-align: center;
         }
 
+        .summary-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .summary-table {
+            width: 280px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 15px;
+            color: #475569;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid #0f172a;
+            margin-top: 8px;
+            padding-top: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .footer {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 24px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .website-link {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2563eb;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-family: "Space Grotesk", sans-serif;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
         .download-bar {
-            max-width: 650px;
+            max-width: 800px;
             margin: 16px auto 0 auto;
             text-align: right;
         }
 
         .download-button {
-            background-color: #2563eb;
+            background-color: #0f172a;
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -196,23 +241,44 @@
         }
 
         .download-button:hover {
-            background-color: #1d4ed8;
+            background-color: #1e293b;
         }
 
         @media print {
+
+            html,
             body {
+                height: 100%;
                 background-color: #fff;
                 padding: 0;
+                margin: 0;
+                display: block;
+                overflow: hidden;
             }
 
             .download-bar {
                 display: none;
             }
 
-            .invoice-card {
+            .invoice-container {
                 box-shadow: none;
+                border: none;
+                height: 100%;
                 max-width: 100%;
-                margin: 0;
+                margin: 0 auto;
+                padding: 0;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .footer {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                padding-top: 12px;
+                background-color: #fff;
             }
 
             * {
@@ -225,75 +291,93 @@
 
 <body>
 
-    <div class="invoice-card">
-        <div class="header">
-            <div class="company-name">Pixel Store</div>
-            <div class="invoice-title">
-                INVOICE
-                <div class="invoice-id">{{invoiceId}}</div>
+    <div class="invoice-container">
+
+        <div class="invoice-number-top">
+            {{invoiceId}}
+        </div>
+
+        <div class="brand-center">
+            <img src="https://api-pixelstore.vercel.app/assets/icons/Pixel_Store_Logo.png" alt="Logo" class="logo">
+            <div class="brand-name">
+                Pixel Store
             </div>
         </div>
 
-        <div class="meta-row">
-            <div class="bill-to">
-                <p class="label">Billed To</p>
-                <p class="name">{{name}}</p>
-                {{#if email}}<p class="email">{{email}}</p>{{/if}}
+        <h1 class="invoice-title">invoice.</h1>
+
+        <div class="details-grid">
+            <div class="details-left">
+                <p><strong>Billed to:</strong></p>
+                <p>{{name}}</p>
+                {{#if email}}<p>{{email}}</p>{{/if}}
+
+                {{#if paidUsing}}
+                <p class="payment-method"><strong>Paid Using:</strong></p>
+                <p>{{paidUsing}}</p>
+                {{/if}}
             </div>
 
-            <div class="order-meta">
-                <p class="label">Order Reference</p>
-                <p class="ord-id">{{orderId}}</p>
+            <div class="details-right">
+                {{#if orderDate}}<p><strong>Date:</strong> {{orderDate}}</p>{{/if}}
+                <p><strong>Order ID:</strong> {{orderId}}</p>
             </div>
         </div>
 
-        <table>
+        <table class="items-table">
             <thead>
                 <tr>
-                    <th>Item</th>
-                    <th class="text-right">Qty</th>
-                    <th class="text-right">Price</th>
+                    <th>Item Description</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-right">Unit Price</th>
                     <th class="text-right">Tax</th>
-                    <th class="text-right">Amount</th>
+                    <th class="text-right">Total</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each items}}
                 <tr>
                     <td>
-                        {{this.name}}
-                        {{#if this.SKU}}<span class="sku-cell">{{this.SKU}}</span>{{/if}}
+                        <div class="item-name">{{this.name}}</div>
+                        {{#if this.SKU}}<div class="item-sku">SKU: {{this.SKU}}</div>{{/if}}
                     </td>
-                    <td class="text-right">{{this.quantity}}</td>
+                    <td class="text-center">{{this.quantity}}</td>
                     <td class="text-right">₹{{this.price}}</td>
-                    <td class="text-right tax-cell">{{this.taxApplicable}}%</td>
-                    <td class="text-right">₹{{lineTotal}}</td>
+                    <td class="text-right">{{this.taxApplicable}}%</td>
+                    <td class="text-right">₹{{this.lineTotal}}</td>
                 </tr>
                 {{/each}}
             </tbody>
         </table>
 
-        <div class="totals">
-            <div class="totals-box">
-                <div class="totals-row">
+        <div class="summary-section">
+            <div class="summary-table">
+                <div class="summary-row subtotal">
                     <span>Subtotal</span>
                     <span>₹{{sub_total}}</span>
                 </div>
-                <div class="totals-row grand">
-                    <span>Total Due</span>
+                <div class="summary-row taxtotal">
+                    <span>Tax</span>
+                    <span>₹{{tax_total}}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
                     <span>₹{{total}}</span>
                 </div>
             </div>
         </div>
 
-        <div class="footer-note">
-            This is a computer-generated invoice and does not require a signature.
+        <div class="footer">
+            <a href="https://pixelstore.pages.dev" class="website-link">pixelstore.pages.dev</a>
+            <p class="disclaimer">This is a computer-generated invoice and doesn't require a physical signature.</p>
         </div>
+
     </div>
 
     <div class="download-bar">
         <button class="download-button" onclick="window.print()">Download Invoice</button>
     </div>
+
 
     <script>
         window.oncontextmenu = function () {
@@ -309,6 +393,10 @@
                 event.preventDefault();
             }
         }, false);
+
+        window.onafterprint = function () {
+            window.close();
+        };
 
         const params = new URLSearchParams(window.location.search);
 
