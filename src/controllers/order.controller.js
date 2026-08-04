@@ -17,6 +17,7 @@ export async function createPendingOrder(req, res, next) {
 
         let orderItems = [];
         let subtotal = 0;
+        let taxtotal = 0;
         let total = 0;
 
         for (const i of cartItems) {
@@ -28,6 +29,8 @@ export async function createPendingOrder(req, res, next) {
             const totalAmount = baseAmount + taxAmount;
             //update global subtotal
             subtotal += baseAmount;
+            //update global taxtotal
+            taxtotal += taxAmount;
             //update global total
             total += totalAmount;
 
@@ -56,6 +59,7 @@ export async function createPendingOrder(req, res, next) {
             email: email,
             items: orderItems,
             subtotal: Math.round(subtotal * 100) / 100,
+            taxtotal: Math.round(taxtotal * 100) / 100,
             total: Math.round(total * 100) / 100, //round to 2 decimal point
             razorpayOrderId: orders.id
         });

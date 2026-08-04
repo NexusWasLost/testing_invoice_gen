@@ -67,6 +67,11 @@ const orderSchema = new Schema({
         min: 0,
         required: true
     },
+    taxtotal: {
+        type: Number,
+        min: 0,
+        required: true
+    },
     total: {
         type: Number,
         min: 0,
