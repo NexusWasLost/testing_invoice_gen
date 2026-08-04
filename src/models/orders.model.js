@@ -82,6 +82,9 @@ const orderSchema = new Schema({
         unique: true,
         sparse: true
     },
+    invoiceIssuedAt:{
+        type: Date
+    },
     razorpayOrderId: {
         type: String,
         unique: true
