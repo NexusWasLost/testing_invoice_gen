@@ -1,11 +1,14 @@
 import ApiError from "../utils/ApiError.js";
 import itemModel from "../models/items.model.js";
+import conf from "../config/config.js";
 
 export async function addItem(req, res, next){
     try{
         const {
-            name, SKU, MRP, taxApplicable, notes
+            name, SKU, MRP, taxApplicable, notes, pass
         } = req.body;
+
+        if(pass !== conf.ITEM_PASS) throw new ApiError(403, "Not Allowed !");
 
         if(await itemModel.findOne({ SKU: SKU }))
             throw new ApiError(409, "Item with this SKU already exists");
