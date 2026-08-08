@@ -11,37 +11,40 @@ export async function renderInvoice(req, res, next) {
         if (!ord) throw new ApiError(404, "No valid orders found with this order ID !");
 
         if (ord.status === "PENDING" || ord.status === "FAILED")
-            throw new ApiError(400, "Order is either pending or failed completely ! Cannot generated invoice for pending or failed orders !");
+            throw new ApiError(400, "Order is either pending or failed completely ! Cannot generate invoice for pending or failed orders !");
 
         const context = {
             name: ord.nameOnOrder,
             email: ord.email,
             items: ord.items.map(function (item) {
-                const base = item.sellingPrice * item.quantity; //selling price is tax exclusive
-                const tax = base * (item.taxAtTimeOfPurchase / 100);
+                const basePaise = item.sellingPrice * item.quantity;
+                const taxPaise = Math.round(basePaise * (item.taxAtTimeOfPurchase / 100));
+                const lineTotalPaise = basePaise + taxPaise;
 
                 return {
                     name: item.itemName,
                     SKU: item.itemSKU,
                     quantity: item.quantity,
-                    price: item.sellingPrice,
+                    price: item.sellingPrice / 100,
                     taxApplicable: item.taxAtTimeOfPurchase,
-                    lineTotal: Math.round((base + tax) * 100) / 100
-                }
+                    taxAmount: taxPaise / 100,
+                    lineTotal: lineTotalPaise / 100
+                };
             }),
-            sub_total: ord.subtotal,
-            tax_total: ord.taxtotal,
-            total: ord.total,
+            //convert main totals from paise to rupees
+            sub_total: ord.subtotal / 100,
+            tax_total: ord.taxtotal / 100,
+            total: ord.total / 100,
             invoiceId: ord.invoiceId,
             orderId: ord.orderId,
-            orderDate: new Date(ord.invoiceIssuedAt).toLocaleDateString("en-IN", {
+            orderDate: new Date(ord.invoiceIssuedAt || ord.createdAt).toLocaleDateString("en-IN", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
-                timeZone: "UTC"
+                timeZone: "Asia/Kolkata"
             }),
             paidUsing: ord.paidUsing
-        }
+        };
 
         return res.render("invoice", context);
     }

@@ -1,6 +1,7 @@
 import ApiError from "../utils/ApiError.js";
 import itemModel from "../models/items.model.js";
 import conf from "../config/config.js";
+import { convertToPaise } from "../utils/convert.js";
 
 export async function addItem(req, res, next){
     try{
@@ -13,15 +14,18 @@ export async function addItem(req, res, next){
         if(await itemModel.findOne({ SKU: SKU }))
             throw new ApiError(409, "Item with this SKU already exists");
 
-        //get tax rate in decimal
+        const targetPricePaise = convertToPaise(targetPrice);
+        if(!targetPricePaise) throw new ApiError(500, "Failed to convert to paise");
+
+        // //get tax rate in decimal
         const taxRate = (taxApplicable || 18) / 100;
-        //calculate base price
-        const basePrice = Math.round((targetPrice / (1 + taxRate)) * 100) / 100;
+        // //calculate base price
+        const basePricePaise = Math.round(targetPricePaise / (1 + taxRate));
 
         const item = new itemModel({
             name: name,
             SKU: SKU,
-            basePrice: basePrice,
+            basePrice: basePricePaise,
             taxApplicable: taxApplicable || 18,
             notes: notes || null
         });

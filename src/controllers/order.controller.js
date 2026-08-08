@@ -25,7 +25,7 @@ export async function createPendingOrder(req, res, next) {
             if (!item) throw new ApiError(404, `Item ${i.itemName} not found !`);
 
             const baseAmount = item.basePrice * i.quantity;
-            const taxAmount = baseAmount * (item.taxApplicable / 100);
+            const taxAmount = Math.round(baseAmount * (item.taxApplicable / 100));
             const totalAmount = baseAmount + taxAmount;
             //update global subtotal
             subtotal += baseAmount;
@@ -46,7 +46,7 @@ export async function createPendingOrder(req, res, next) {
         }
 
         const options = {
-            amount: Math.round(total * 100),
+            amount: total,
             currency: "INR"
         }
 
@@ -58,9 +58,9 @@ export async function createPendingOrder(req, res, next) {
             nameOnOrder: nameOnOrder,
             email: email,
             items: orderItems,
-            subtotal: Math.round(subtotal * 100) / 100,
-            taxtotal: Math.round(taxtotal * 100) / 100,
-            total: Math.round(total * 100) / 100, //round to 2 decimal point
+            subtotal: subtotal,
+            taxtotal: taxtotal,
+            total: total,
             razorpayOrderId: orders.id
         });
         try {
