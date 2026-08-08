@@ -5,13 +5,16 @@ import conf from "../config/config.js";
 export async function addItem(req, res, next){
     try{
         const {
-            name, SKU, basePrice, taxApplicable, notes, pass
+            name, SKU, targetPrice, taxApplicable, notes, pass
         } = req.body;
 
         if(pass !== conf.ITEM_PASS) throw new ApiError(403, "Not Allowed !");
 
         if(await itemModel.findOne({ SKU: SKU }))
             throw new ApiError(409, "Item with this SKU already exists");
+
+        //calculate base price
+        const basePrice = Math.round((targetPrice / (1 + taxApplicable)) * 100) / 100;
 
         const item = new itemModel({
             name: name,
