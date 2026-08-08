@@ -17,7 +17,7 @@ export async function renderInvoice(req, res, next) {
             name: ord.nameOnOrder,
             email: ord.email,
             items: ord.items.map(function (item) {
-                const base = item.sellingPrice * item.quantity;
+                const base = item.sellingPrice * item.quantity; //selling price is tax exclusive
                 const tax = base * (item.taxAtTimeOfPurchase / 100);
 
                 return {

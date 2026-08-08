@@ -10,7 +10,7 @@ const itemSchema = new Schema({
         unique: true,
         required: true
     },
-    MRP: {
+    basePrice: {
         type: Number,
         min: 0,
         default: 0

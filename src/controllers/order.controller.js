@@ -24,7 +24,7 @@ export async function createPendingOrder(req, res, next) {
             const item = await itemModel.findById(i.itemId);
             if (!item) throw new ApiError(404, `Item ${i.itemName} not found !`);
 
-            const baseAmount = item.MRP * i.quantity;
+            const baseAmount = item.basePrice * i.quantity;
             const taxAmount = baseAmount * (item.taxApplicable / 100);
             const totalAmount = baseAmount + taxAmount;
             //update global subtotal
@@ -39,9 +39,9 @@ export async function createPendingOrder(req, res, next) {
                 itemName: item.name,
                 itemSKU: item.SKU,
                 quantity: i.quantity,
-                sellingPrice: item.MRP,
+                sellingPrice: item.basePrice,
                 taxAtTimeOfPurchase: item.taxApplicable || 18,
-                MRPAtTimeOfPurchase: item.MRP
+                basePriceAtTimeOfPurchase: item.basePrice
             });
         }
 

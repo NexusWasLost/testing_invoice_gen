@@ -5,7 +5,7 @@ import conf from "../config/config.js";
 export async function addItem(req, res, next){
     try{
         const {
-            name, SKU, MRP, taxApplicable, notes, pass
+            name, SKU, basePrice, taxApplicable, notes, pass
         } = req.body;
 
         if(pass !== conf.ITEM_PASS) throw new ApiError(403, "Not Allowed !");
@@ -16,7 +16,7 @@ export async function addItem(req, res, next){
         const item = new itemModel({
             name: name,
             SKU: SKU,
-            MRP: MRP,
+            basePrice: basePrice,
             taxApplicable: taxApplicable || 18,
             notes: notes || null
         });

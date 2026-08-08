@@ -19,6 +19,7 @@ const orderItemSchema = new Schema({
         min: 1,
         required: true
     },
+    //SELLING PRICE IS TAX EXCLUSIVE (DOES NOT INCLUDE TAX)
     sellingPrice: {
         type: Number,
         min: 0,
@@ -31,7 +32,7 @@ const orderItemSchema = new Schema({
         required: true
     },
     //populated from item model when the purchase is made
-    MRPAtTimeOfPurchase: {
+    basePriceAtTimeOfPurchase: {
         type: Number,
         min: 0,
         required: true
